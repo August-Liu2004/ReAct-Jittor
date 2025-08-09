@@ -1,6 +1,6 @@
 # 🤖 基于 JittorLLM 实现的 ReAct 推理系统
 
-> 使用 JittorLLM 部署大语言模型，在 HotpotQA 与 FEVER 上实现 ReAct 推理流程，并结合 Baseline 方法进行对比评估。
+> 使用 JittorLLM 部署大语言模型，在知识密集型任务上 HotpotQA 与 FEVER 上实现 ReAct 推理流程，并结合 Baseline 方法进行对比评估。
 
 ---
 
