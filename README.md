@@ -8,7 +8,7 @@
 
 在阅读多篇 Agent 类论文（如 ReAct、Tree of Thoughts、AgentPrune）过程中，我们发现这些论文主要聚焦于模型**推理逻辑与 API 交互机制**，而非从零训练大语言模型。
 
-但本项目要求必须使用 Jittor 框架进行训练，这与论文目标存在一定偏差。因此，我们采用 [**JittorLLM**]来部署已有大模型，**更专注于推理实现，更贴合论文初衷**，也更符合真实应用场景。
+但本项目要求必须使用 Jittor 框架进行训练，这与论文目标存在一定偏差。因此，我们采用 **JittorLLM**来部署已有大模型，**更专注于推理实现，更贴合论文初衷**，也更符合真实应用场景。
 
 ✅ 此方案优点：
 
@@ -93,15 +93,15 @@ python api.py llama2
    - 评估任务包括：HotpotQA 与 FEVER；  
    - 使用 EM 精度指标进行量化对比。
 
-5.✏️ Prompt 提示词工程优化
+5. ✏️ **Prompt 提示词工程优化**
 
-**(a) FEVER 提示词**  
+      **(a) FEVER 提示词**  
 
    - 限制输出标签为 `SUPPORTS` / `REFUTES` / `NOT ENOUGH INFO`  
    - 引导模型仅输出标签，避免冗余解释  
    - 保证生成符合 FEVER 事实核查标准  
 
-**(b) HotpotQA 提示词**  
+      **(b) HotpotQA 提示词**  
 
    - 针对 HotpotQA 需要在多篇文档间进行多跳推理的特点，提示词强调分步检索与逐步整合证据  
    - 明确限定可执行的三类动作：`Search[entity]`、`Lookup[keyword]`、`Finish[answer]`，以减少无关推理路径  
