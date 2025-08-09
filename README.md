@@ -80,7 +80,7 @@ python api.py llama2
 2. 🔧 **JittorLLM 框架兼容性修复**  
    原始的 JittorLLM 并不兼容 ReAct 所需的 step-by-step 推理方式：  
    - 初始版本的 LLAMA2 模型仅支持短文本对话，无法支持连续推理与行为输出；  
-   - 为此，我深入修改了 LLAMA2 的源码，使其能作为 ReAct 的推理后端运行，支持连续 Token 输出与推理-行动结构。
+   - 为此，我修改了 LLAMA2 的源码，使其能作为 ReAct 的推理后端运行，支持连续 Token 输出与推理-行动结构。
 
 3. 🌐 **国内推理环境适配：百度百科替代 Wikipedia**  
    - autodl 云平台限制访问 Wikipedia，因此我重写了 `Wikienv.py`，将原环境替换为 **百度百科知识检索模块**（基于爬虫）；  
