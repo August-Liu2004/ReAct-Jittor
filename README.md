@@ -55,7 +55,7 @@ pip install jittor -U -i https://pypi.org/simple
 
 ### 2️⃣ 启动 API 推理服务
 
-1. 修改 `api.py` 中 IP 和端口（默认 `0.0.0.0:8000`）；
+1. 修改 api.py 中 IP 和端口（默认 0.0.0.0:8000）；
 2. 启动模型：
 
 ```bash
@@ -64,7 +64,7 @@ python api.py llama2
 
 ### 3️⃣ 执行推理任务
 
-- 修改 `hotpotQA.ipynb` 与 `FEVER.ipynb` 中的 API 端口；
+- 修改 hotpotQA.ipynb 与 FEVER.ipynb 中的 API 端口；
 - 按 Cell 顺序执行即可；
 
 ---
@@ -104,8 +104,8 @@ python api.py llama2
    **(b) HotpotQA 提示词**  
 
    - 针对 HotpotQA 需要在多篇文档间进行多跳推理的特点，提示词强调分步检索与逐步整合证据  
-   - 明确限定可执行的三类动作：`Search[entity]`、`Lookup[keyword]`、`Finish[answer]`，以减少无关推理路径  
-   - `Lookup` 必须在 `Search` 返回内容后使用，`Finish` 仅包含括号内答案  
+   - 明确限定可执行的三类动作：Search[entity]、Lookup[keyword]、Finish[answer]，以减少无关推理路径  
+   - Lookup 必须在 Search 返回内容后使用，Finish 仅包含括号内答案  
 
 > 所有代码修改、部署脚本、调试日志均可在本仓库中复现，模型运行、推理 API 接口等均由本人独立完成。
 
