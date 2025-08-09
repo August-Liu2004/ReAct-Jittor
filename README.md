@@ -83,7 +83,7 @@ python api.py llama2
    - 为此，我修改了 LLAMA2 的源码，使其能作为 ReAct 的推理后端运行，支持连续 Token 输出与推理-行动结构。
 
 3. 🌐 **国内推理环境适配：百度百科替代 Wikipedia**  
-   - autodl 云平台限制访问 Wikipedia，因此我重写了`Wikienv.py`，将原环境替换为 **百度百科知识检索模块**（基于爬虫）；  
+   - autodl 云平台限制访问 Wikipedia，因此我重写了Wikienv.py，将原环境替换为 **百度百科知识检索模块**（基于爬虫）；  
    - 由于 LLAMA2 为英文模型，而百度百科以中文信息为主，导致信息提取困难；  
    - 我设计并集成了 **国产大模型 DeepSeek 作为翻译器**，实现中英交互，增强模型对百度百科内容的理解与利用。
 
@@ -144,7 +144,7 @@ python api.py llama2
 
 ### 📍 Jupyter Notebook 中的输出查看方式
 
-所有中间过程（模型思考 Thought、动作 Action、观察 Observation，以及最终回答 Finish）都可以在对应 `.ipynb` 文件中运行 Cell 后直接在输出框查看。如下图所示：
+所有中间过程（模型思考 Thought、动作 Action、观察 Observation，以及最终回答 Finish）都可以在对应 .ipynb 文件中运行 Cell 后直接在输出框查看。如下图所示：
 
 <p align="center">
   <img src="./ReAct/pictures/FEVER_example.png" width="600"/>
