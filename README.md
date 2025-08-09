@@ -101,7 +101,7 @@ python api.py llama2
    - 引导模型仅输出标签，避免冗余解释  
    - 保证生成符合 FEVER 事实核查标准  
 
-      **(b) HotpotQA 提示词**  
+   **(b) HotpotQA 提示词**  
 
    - 针对 HotpotQA 需要在多篇文档间进行多跳推理的特点，提示词强调分步检索与逐步整合证据  
    - 明确限定可执行的三类动作：`Search[entity]`、`Lookup[keyword]`、`Finish[answer]`，以减少无关推理路径  
