@@ -1,6 +1,6 @@
 # 🤖 基于 JittorLLM 实现的 ReAct 推理系统
 
-> 使用 JittorLLM 部署大语言模型，在知识密集型任务上 HotpotQA 与 FEVER 上实现 ReAct 推理流程，并结合 Baseline 方法进行对比评估。
+> 使用 JittorLLM 部署大语言模型，在 HotpotQA 与 FEVER 上实现 ReAct 推理流程，并结合 Baseline 方法进行对比评估。
 
 ---
 
@@ -8,7 +8,7 @@
 
 在阅读多篇 Agent 类论文（如 ReAct、Tree of Thoughts、AgentPrune）过程中，我们发现这些论文主要聚焦于模型**推理逻辑与 API 交互机制**，而非从零训练大语言模型。
 
-但本项目要求必须使用 Jittor 框架进行训练，这与论文目标存在一定偏差。因此，我们采用 **JittorLLM**来部署已有大模型，**更专注于推理实现，更贴合论文初衷**，也更符合真实应用场景。
+但本项目要求必须使用 Jittor 框架进行训练，这与论文目标存在一定偏差。因此，我们采用 [**JittorLLM**]来部署已有大模型，**更专注于推理实现，更贴合论文初衷**，也更符合真实应用场景。
 
 ✅ 此方案优点：
 
@@ -38,7 +38,7 @@
 
 ---
 
-## 🛠 部署步骤
+## 🛠 JIttor步骤
 
 ### 1️⃣ 安装依赖
 
@@ -55,7 +55,7 @@ pip install jittor -U -i https://pypi.org/simple
 
 ### 2️⃣ 启动 API 推理服务
 
-1. 修改 api.py 中 IP 和端口（默认 0.0.0.0:8000）；
+1. 修改 `api.py` 中 IP 和端口（默认 `0.0.0.0:8000`）；
 2. 启动模型：
 
 ```bash
@@ -64,7 +64,43 @@ python api.py llama2
 
 ### 3️⃣ 执行推理任务
 
-- 修改 hotpotQA.ipynb 与 FEVER.ipynb 中的 API 端口；
+- 修改 `hotpotQA.ipynb` 与 `FEVER.ipynb` 中的 API 端口；
+- 按 Cell 顺序执行即可；
+
+---
+
+## 🛠 Pytorch步骤
+
+### 1️⃣ 注册内核（这一部分非常关键，它将Pytorch和Jittor隔离起来）
+1. 在终端输入：
+
+```bash
+source /root/miniconda3/etc/profile.d/conda.sh
+conda activate /root/autodl-tmp/env-pt113
+pip install ipykernel
+python -m ipykernel install --user --name env-pt113 --display-name "Python (env-pt113)"
+```
+
+> --name env-pt113：内核的系统标识（唯一）
+
+> --display-name "Python (env-pt113)"：在 Notebook 界面显示的名称
+
+```bash
+pip install jittor -U -i https://pypi.org/simple
+```
+
+### 2️⃣ 在 Notebook 中选择内核
+
+1. 点击右上角内核选择器，选择 Python (env-pt113)
+2. 启动模型：
+
+```bash
+python api.py llama2
+```
+
+### 3️⃣ 执行推理任务
+
+- 进入 hotpotqa_pytorch.ipynb 与 FEVER_pytorch.ipynb 
 - 按 Cell 顺序执行即可；
 
 ---
@@ -80,10 +116,10 @@ python api.py llama2
 2. 🔧 **JittorLLM 框架兼容性修复**  
    原始的 JittorLLM 并不兼容 ReAct 所需的 step-by-step 推理方式：  
    - 初始版本的 LLAMA2 模型仅支持短文本对话，无法支持连续推理与行为输出；  
-   - 为此，我修改了 LLAMA2 的源码，使其能作为 ReAct 的推理后端运行，支持连续 Token 输出与推理-行动结构。
+   - 为此，我深入修改了 LLAMA2 的源码，使其能作为 ReAct 的推理后端运行，支持连续 Token 输出与推理-行动结构。
 
 3. 🌐 **国内推理环境适配：百度百科替代 Wikipedia**  
-   - autodl 云平台限制访问 Wikipedia，因此我重写了Wikienv.py，将原环境替换为 **百度百科知识检索模块**（基于爬虫）；  
+   - autodl 云平台限制访问 Wikipedia，因此我重写了 `Wikienv.py`，将原环境替换为 **百度百科知识检索模块**（基于爬虫）；  
    - 由于 LLAMA2 为英文模型，而百度百科以中文信息为主，导致信息提取困难；  
    - 我设计并集成了 **国产大模型 DeepSeek 作为翻译器**，实现中英交互，增强模型对百度百科内容的理解与利用。
 
@@ -93,19 +129,26 @@ python api.py llama2
    - 评估任务包括：HotpotQA 与 FEVER；  
    - 使用 EM 精度指标进行量化对比。
 
-5. ✏️ **Prompt 提示词工程优化**
+5. ✏️ **Prompt 提示词工程优化** 
 
-      **(a) FEVER 提示词**  
+**(a) FEVER 提示词**  
 
    - 限制输出标签为 `SUPPORTS` / `REFUTES` / `NOT ENOUGH INFO`  
    - 引导模型仅输出标签，避免冗余解释  
    - 保证生成符合 FEVER 事实核查标准  
 
-   **(b) HotpotQA 提示词**  
+**(b) HotpotQA 提示词**  
 
    - 针对 HotpotQA 需要在多篇文档间进行多跳推理的特点，提示词强调分步检索与逐步整合证据  
-   - 明确限定可执行的三类动作：Search[entity]、Lookup[keyword]、Finish[answer]，以减少无关推理路径  
-   - Lookup 必须在 Search 返回内容后使用，Finish 仅包含括号内答案  
+   - 明确限定可执行的三类动作：`Search[entity]`、`Lookup[keyword]`、`Finish[answer]`，以减少无关推理路径  
+   - `Lookup` 必须在 `Search` 返回内容后使用，`Finish` 仅包含括号内答案  
+
+6. 🔥 **对齐Pytorch** 
+
+   - 本地加载 LLaMA2 模型：基于 PyTorch 从本地路径加载llama2模型 
+   - 流式推理与“步骤”生成：按 Thought → Action → Observation → Finish 输出；为 Finish[...] 配置停止词，命中即返回；
+   - 完成对应实验与评测：在 HotpotQA、FEVER 子集上跑通 ReAct 推理,对齐标注计算 EM,并与Jittor框架进行比较
+
 
 > 所有代码修改、部署脚本、调试日志均可在本仓库中复现，模型运行、推理 API 接口等均由本人独立完成。
 
@@ -115,13 +158,17 @@ python api.py llama2
 
 | 任务      | 方法             | EM（10 条样本） |
 |-----------|------------------|------------------|
-| HotpotQA  | Baseline         | 0              |
+| HotpotQA  | Baseline(JittorLLM)| 0              |
 | HotpotQA  | ReAct (JittorLLM)| 2              |
-| FEVER     | Baseline         | 4              |
+| HotpotQA  | Baseline(Pytorch)| 1              |
+| HotpotQA  | ReAct (Pytorch)  | 2              |
+| FEVER     | Baseline(JittorLLM)| 4              |
+| FEVER     | ReAct (JittorLLM)| 3              |
+| FEVER     | Baseline(Pytorch)| 4              |
 | FEVER     | ReAct (JittorLLM)| 3              |
 
 > ⚠️ 仅使用 10 个样本，因 24GB 显存限制导致无法支持更多推理输入。
-> ⚠️ 此外，① 由于算力限制，② 百度百科对英文内容的搜索能力有限，以及翻译过程中的不准确性，都可能对最终结果产生影响。但总体而言，ReAct 模型在本项目中的表现依然优于基线方法。
+
 ---
 
 ## 🧠 Prompt 示例与数据说明
@@ -144,7 +191,7 @@ python api.py llama2
 
 ### 📍 Jupyter Notebook 中的输出查看方式
 
-所有中间过程（模型思考 Thought、动作 Action、观察 Observation，以及最终回答 Finish）都可以在对应 .ipynb 文件中运行 Cell 后直接在输出框查看。如下图所示：
+所有中间过程（模型思考 Thought、动作 Action、观察 Observation，以及最终回答 Finish）都可以在对应 `.ipynb` 文件中运行 Cell 后直接在输出框查看。如下图所示：
 
 <p align="center">
   <img src="./ReAct/pictures/FEVER_example.png" width="600"/>
@@ -160,15 +207,20 @@ python api.py llama2
 
 ## 📜 执行脚本说明
 
-- `api.py`：启动后端推理服务  
-- `cli_demo.py`：命令行测试样例  
-- `hotpotQA.ipynb`：HotpotQA 的评估与对比实验  
-- `FEVER.ipynb`：FEVER 的评估与对比实验  
+- `api.py`：Jittor启动后端推理服务  
+- `cli_demo.py`：Jittor命令行测试样例  
+- `hotpotQA.ipynb`：HotpotQA(Jittor) 的评估与对比实验  
+- `FEVER.ipynb`：FEVER(Jittor) 的评估与对比实验
+- `hotpotqa_pytorch.ipynb`：HotpotQA(Pytorch) 的评估与对比实验  
+- `FEVER_pytorch.ipynb`：FEVER(Pytorch) 的评估与对比实验   
+
 
 ### 🛠 环境脚本说明
 
 - `wrapper.py`：实现 HotPotQA 与 FEVER 数据集的自定义 Gym 环境封装，包括数据加载、重置逻辑、评估指标（EM、F1）以及本项目以推理任务为主，未单独启用日志记录模块，而是将日志直接输出在运行结果（cell）中，同时保留了相关的日志记录实现代码，便于后续扩展。
 - `wikienv.py`：替换原始 Wikipedia 检索为百度百科检索环境，支持中文页面解析与段落提取，并集成 DeepSeek 模型进行中英互译，使 ReAct 模型可在中文环境中完成搜索、查找与答案生成。
+- `Pytorch_llama2.py`：llama2模型本地加载器，为Pytorch框架做ReAct推理的准备   
+
 
 ## 📬 联系方式
 
