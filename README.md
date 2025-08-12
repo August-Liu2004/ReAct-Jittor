@@ -165,7 +165,7 @@ python api.py llama2
 | FEVER     | Baseline(JittorLLM)| 4              |
 | FEVER     | ReAct (JittorLLM)| 3              |
 | FEVER     | Baseline(Pytorch)| 4              |
-| FEVER     | ReAct (JittorLLM)| 3              |
+| FEVER     | ReAct (Pytorch)| 3              |
 
 > ⚠️ 仅使用 10 个样本，因 24GB 显存限制导致无法支持更多推理输入。
 
